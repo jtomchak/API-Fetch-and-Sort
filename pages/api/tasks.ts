@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import seedData from "../../seed.json";
+import { faker } from "@faker-js/faker";
 
 enum Status {
   "pending" = "pending",
@@ -42,25 +43,54 @@ function shuffle(array) {
   return array;
 }
 
+let numberofTasks = 0;
 let tasks: Data[] = [];
+let finishedTasks: Data[] = [];
 
-function addTasks() {
-  let item = shuffle(seedData).sort(() => 0.5 - Math.random())[0];
-  tasks = [...tasks, item];
-}
+// function addTasks() {
+//   numberofTasks = numberofTasks + 1;
+//   console.log(numberofTasks);
+//   let item = {
+//     name: faker.name.firstName(),
+//     id: faker.finance.iban(),
+//     status: Status.pending,
+//   };
+//   tasks = [...tasks, item];
+// }
 
 function modifyTasks() {
   let task = shuffle(tasks).sort(() => 0.5 - Math.random())[0];
   let foundTask = tasks.find((t) => t.id === task.id);
-  if (foundTask && foundTask.status === Status.pending) {
-    foundTask.status = shuffle(statusOptions).sort(
+  if (foundTask && [Status.pending, Status.delay].includes(foundTask.status)) {
+    foundTask.status = shuffle([Status.success, Status.failure]).sort(
       () => 0.5 - Math.random()
     )[0];
   }
+  tasks = tasks.filter((task) => {
+    if (["success", "failure"].includes(task.status)) {
+      finishedTasks.push(task);
+      console.log(finishedTasks);
+      return false;
+    } else {
+      return true;
+    }
+  });
 }
 
 (function runningTasks() {
-  setInterval(addTasks, 5000);
+  const addingPendingTasks = setInterval(() => {
+    numberofTasks = numberofTasks + 1;
+    if (numberofTasks > 5) {
+      clearInterval(addingPendingTasks);
+    }
+    console.log(numberofTasks);
+    let item = {
+      name: faker.name.firstName(),
+      id: faker.finance.iban(),
+      status: Status.pending,
+    };
+    tasks = [...tasks, item];
+  }, 5000);
   setInterval(modifyTasks, 10000);
 })();
 
