@@ -45,18 +45,7 @@ function shuffle(array) {
 
 let numberofTasks = 0;
 let tasks: Data[] = [];
-let finishedTasks: Data[] = [];
-
-// function addTasks() {
-//   numberofTasks = numberofTasks + 1;
-//   console.log(numberofTasks);
-//   let item = {
-//     name: faker.name.firstName(),
-//     id: faker.finance.iban(),
-//     status: Status.pending,
-//   };
-//   tasks = [...tasks, item];
-// }
+export let finishedTasks: Data[] = [];
 
 function modifyTasks() {
   let task = shuffle(tasks).sort(() => 0.5 - Math.random())[0];

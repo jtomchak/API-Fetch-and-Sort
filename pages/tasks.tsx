@@ -27,6 +27,8 @@ const Tasks: NextPage = () => {
             const noLongerPendingTasks = data.filter((task) => {
               return !pendingIds.includes(task.id);
             });
+            // fetch noLongerPendingTasks by id /api/tasks/:id
+            // then add to state :pointdown:
             setFinishedTasks([...finishedTasks, ...noLongerPendingTasks]);
           }
           setData(tasks);
